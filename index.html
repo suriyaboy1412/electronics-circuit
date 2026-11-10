@@ -391,6 +391,14 @@ body.cv-full #vbtns{top:10px;bottom:auto;right:10px}
 body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
 @media (max-width:900px) and (orientation:portrait), (max-width:640px){body.cv-full #vbtns{top:6px;right:6px}body.cv-full #props{top:auto;max-height:calc(100% - 52px)}}
 @media (max-height:540px) and (orientation:landscape) and (min-width:641px){body.cv-full #vbtns{top:6px;right:6px}body.cv-full #props{top:46px;max-height:calc(100% - 52px)}}
+#pwForm{display:grid;gap:10px;padding-top:4px}
+.pw-msg{margin:0;color:var(--muted)}
+#pwIn{height:46px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--fg);font:600 20px var(--mono);letter-spacing:.3em;text-align:center}
+#pwIn:focus{outline:2px solid var(--accent);outline-offset:1px}
+#pwIn.bad{border-color:var(--danger);animation:pwshake .3s}
+@keyframes pwshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pw-err{margin:0;color:var(--danger);font-size:13px}
+.pw-ok{height:44px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-fg);font:600 15px var(--ui)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -492,6 +500,15 @@ body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
   <div class="sh"><h2>ลบวงจร</h2><button class="x" data-close aria-label="ปิด">✕</button></div>
   <button class="bigopt" id="clrWires"><b>ลบเฉพาะสายไฟ</b><span>คงอุปกรณ์ไว้ตำแหน่งเดิม ให้นักเรียนฝึกต่อวงจรเองแล้วกดตรวจสอบ</span></button>
   <button class="bigopt danger" id="clrAll"><b>ลบทั้งหมด</b><span>ลบอุปกรณ์และสายไฟทุกเส้น เริ่มต่อวงจรใหม่ (กด ย้อน เพื่อกู้คืนได้)</span></button>
+</div>
+<div id="pwModal" class="sheet small" hidden role="dialog" aria-label="ใส่รหัสเพื่อเปิดตัวอย่างวงจร">
+  <div class="sh"><h2>ตัวอย่างวงจร</h2><button class="x" data-close aria-label="ปิด">✕</button></div>
+  <form id="pwForm" autocomplete="off">
+    <p class="pw-msg">กรุณาใส่รหัสเพื่อเปิดตัวอย่างวงจร</p>
+    <input id="pwIn" type="password" inputmode="numeric" maxlength="20" placeholder="รหัสผ่าน" aria-label="รหัสผ่าน">
+    <p id="pwErr" class="pw-err" hidden>รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง</p>
+    <button type="submit" class="pw-ok">เปิดตัวอย่าง</button>
+  </form>
 </div>
 <div id="chkModal" class="sheet" hidden role="dialog" aria-label="ผลการตรวจสอบวงจร">
   <div class="sh"><h2>ผลการตรวจสอบวงจร</h2><button class="x" data-close aria-label="ปิด">✕</button></div>
@@ -3102,6 +3119,28 @@ syncScShow();
 }));
 window.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !fsEl() && (B.classList.contains('cv-full') || B.classList.contains('sc-full'))) setFull('');
+});
+
+/* ---------- password gate for the example browser ---------- */
+const PW_H = 3775363235, PW_KEY = 'circuitsim-exunlock';
+const pwHash = s => { let h = 5381; for (const ch of s) h = (Math.imul(h, 33) ^ ch.charCodeAt(0)) >>> 0; return h; };
+const exUnlocked = () => { try { return sessionStorage.getItem(PW_KEY) === String(PW_H); } catch (e) { return !!window.__exOK; } };
+$('#btnEx').addEventListener('click', e => {
+  if (exUnlocked()) return;
+  e.stopImmediatePropagation();
+  openSheet('#pwModal');
+  $('#pwIn').value = ''; $('#pwErr').hidden = true; $('#pwIn').classList.remove('bad');
+  setTimeout(() => $('#pwIn').focus(), 60);
+}, true);
+$('#pwForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const inp = $('#pwIn');
+  if (pwHash(inp.value.trim()) === PW_H) {
+    window.__exOK = true; try { sessionStorage.setItem(PW_KEY, String(PW_H)); } catch (err) {}
+    openSheet('#exModal');
+  } else {
+    $('#pwErr').hidden = false; inp.classList.remove('bad'); void inp.offsetWidth; inp.classList.add('bad'); inp.select();
+  }
 });
 
 /* ---------- boot ---------- */
