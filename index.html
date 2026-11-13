@@ -399,10 +399,95 @@ body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
 @keyframes pwshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .pw-err{margin:0;color:var(--danger);font-size:13px}
 .pw-ok{height:44px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-fg);font:600 15px var(--ui)}
+
+/* ===== login ===== */
+#login{position:fixed;inset:0;z-index:100;display:flex;overflow:auto;padding:16px;background:radial-gradient(1200px 600px at 20% 0%,color-mix(in srgb,var(--accent) 22%,var(--bg)),var(--bg))}
+#login[hidden]{display:none}
+.lg-card{margin:auto;width:min(520px,100%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:22px 22px 20px;box-shadow:0 18px 50px rgba(0,0,0,.18);display:grid;gap:14px}
+.lg-head{display:flex;gap:12px;align-items:center}
+.lg-head svg{flex:none}
+.lg-head h1{margin:0;font-size:19px;line-height:1.2}
+.lg-head h1 span{color:var(--accent);font-size:14px;font-weight:600}
+.lg-head p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+.lg-card h2{margin:4px 0 0;font-size:16px;border-top:1px solid var(--border);padding-top:14px}
+.lg-f{display:grid;gap:6px;border:0;margin:0;padding:0;min-width:0}
+.lg-f>span,.lg-f legend{font-size:13px;font-weight:600;padding:0;margin-bottom:6px}
+.lg-f input:not([type=radio]){height:44px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--fg);font:500 16px var(--ui);padding:0 12px}
+#lgId{font-family:var(--mono);letter-spacing:.08em}
+.lg-f input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.lg-chips{display:grid;gap:8px}
+.lg-chips.c5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.lg-chips label{position:relative;cursor:pointer}
+.lg-chips input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+.lg-chips span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);font-size:14px;text-align:center}
+.lg-chips.c1 span{justify-content:flex-start;text-align:left}
+.lg-chips.c1 span::before,.lg-chips.c5 span::before{content:"";flex:none;width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);box-sizing:border-box}
+.lg-chips.c5 span::before{display:none}
+.lg-chips b{font-family:var(--mono);font-size:12.5px;color:var(--accent)}
+.lg-chips input:checked+span{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.lg-chips input:checked+span::before{border:5px solid var(--accent)}
+.lg-chips input:focus-visible+span{outline:2px solid var(--accent);outline-offset:1px}
+.lg-err{display:none;color:var(--danger);font-size:12.5px;font-style:normal}
+.lg-f.bad .lg-err{display:block}
+.lg-f.bad input:not([type=radio]),.lg-f.bad .lg-chips span{border-color:var(--danger)}
+.lg-go{height:48px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-fg);font:700 16px var(--ui);margin-top:2px;cursor:pointer}
+.lg-out{height:32px;padding:0 12px;border:1px solid var(--danger);border-radius:8px;background:transparent;color:var(--danger);font:600 13px var(--ui)}
+@media (max-width:420px){.lg-chips.c5{grid-template-columns:repeat(3,minmax(0,1fr))}.lg-card{padding:18px 16px}}
+/* student badge — experiment mode only */
+#stu{display:none;position:absolute;left:10px;bottom:10px;z-index:4;max-width:min(360px,calc(100% - 210px));padding:8px 12px 8px 10px;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;background:color-mix(in srgb,var(--panel) 94%,transparent);box-shadow:0 2px 10px rgba(0,0,0,.12);backdrop-filter:blur(6px);font-size:12.5px;line-height:1.35;pointer-events:none}
+body.mode-exp.logged #stu{display:block}
+body.mode-exp.logged #hint{bottom:76px}
+#stu .n{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#stu .i{font-family:var(--mono);font-size:12px;color:var(--muted)}
+#stu .i b{color:var(--fg)}
+#stu .s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#stu .s b{font-family:var(--mono);color:var(--accent)}
+@media (max-width:900px) and (orientation:portrait), (max-width:640px){#stu{left:6px;bottom:6px;max-width:calc(100% - 190px);font-size:11.5px;padding:6px 9px 6px 8px}#stu .n{font-size:12.5px}#stu .i{font-size:11px}}
+@media (max-height:540px) and (orientation:landscape) and (min-width:641px){#stu{left:6px;bottom:6px;max-width:calc(100% - 100px);font-size:11px;padding:5px 8px}#stu .n{font-size:12px}}
+
+/* student info on full-screen oscilloscope */
+#stu2{display:none}
+body.sc-full.mode-exp.logged #stu2{display:flex;flex:1 1 auto;min-width:0;justify-content:flex-end;flex-wrap:wrap;gap:6px;margin:0 6px}
+#stu2 span{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--bezel-fg);font-size:12.5px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#stu2 .n{font-weight:700;background:rgba(56,214,240,.14);border-color:rgba(56,214,240,.4)}
+#stu2 b{font-family:var(--mono);font-weight:600;color:#ffc21a}
+body.sc-full.mode-exp.logged .sp-title{margin-right:0}
+body.sc-full.mode-exp.logged .sp-head{flex-wrap:wrap}
+@media (max-width:1100px){body.sc-full.mode-exp.logged #stu2{order:10;flex-basis:100%;justify-content:flex-start;margin:4px 0 2px}}
+@media (max-width:640px){#stu2 span{font-size:11.5px;height:24px;padding:0 7px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<div id="login" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
+  <form id="lgForm" class="lg-card" novalidate autocomplete="off">
+    <div class="lg-head"><svg width="44" height="44" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="8" fill="#2b323b"/><path d="M5 20 L10 20 L12.5 12 L16 24 L19 14 L21 20 L29 20" fill="none" stroke="#ffc21a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="25" cy="20" r="1.8" fill="#38d6f0"/></svg><div><h1 id="lgTitle">Electronics Circuit <span>by Suriya PTC</span></h1><p>จำลองวงจรอิเล็กทรอนิกส์ ช่างอิเล็กฯ วท.พนมสารคาม</p></div></div>
+    <h2>ลงชื่อเข้าใช้งาน</h2>
+    <label class="lg-f"><span>รหัสนักศึกษา (11 หลัก)</span>
+      <input id="lgId" inputmode="numeric" maxlength="11" placeholder="เช่น 66201050001" required>
+      <em class="lg-err" data-for="lgId">กรุณาใส่รหัสนักศึกษาเป็นตัวเลข 11 หลัก</em></label>
+    <label class="lg-f"><span>ชื่อ-นามสกุล</span>
+      <input id="lgName" maxlength="80" placeholder="เช่น นายสมชาย ใจดี" required>
+      <em class="lg-err" data-for="lgName">กรุณาใส่ชื่อและนามสกุล</em></label>
+    <fieldset class="lg-f"><legend>ระดับชั้น สาขาวิชาอิเล็กทรอนิกส์</legend>
+      <div class="lg-chips c5">
+        <label><input type="radio" name="lgLv" value="ปวช.1"><span>ปวช.1</span></label>
+        <label><input type="radio" name="lgLv" value="ปวช.2"><span>ปวช.2</span></label>
+        <label><input type="radio" name="lgLv" value="ปวช.3"><span>ปวช.3</span></label>
+        <label><input type="radio" name="lgLv" value="ปวส.1"><span>ปวส.1</span></label>
+        <label><input type="radio" name="lgLv" value="ปวส.2"><span>ปวส.2</span></label>
+      </div>
+      <em class="lg-err" data-for="lgLv">กรุณาเลือกระดับชั้น</em></fieldset>
+    <fieldset class="lg-f"><legend>รายวิชา</legend>
+      <div class="lg-chips c1">
+        <label><input type="radio" name="lgSub" value="20105-2003|วงจรพัลส์และดิจิทัล"><span><b>20105-2003</b> วงจรพัลส์และดิจิทัล</span></label>
+        <label><input type="radio" name="lgSub" value="20105-2002|อุปกรณ์อิเล็กทรอนิกส์และวงจร"><span><b>20105-2002</b> อุปกรณ์อิเล็กทรอนิกส์และวงจร</span></label>
+        <label><input type="radio" name="lgSub" value="20105-2008|วงจรไอซีและการประยุกต์ใช้งาน"><span><b>20105-2008</b> วงจรไอซีและการประยุกต์ใช้งาน</span></label>
+      </div>
+      <em class="lg-err" data-for="lgSub">กรุณาเลือกรายวิชา</em></fieldset>
+    <button type="submit" class="lg-go">เข้าสู่ห้องทดลอง</button>
+  </form>
+</div>
 <div id="app">
   <header id="top">
     <div class="brand">
@@ -450,6 +535,7 @@ body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
       <canvas id="cv" aria-label="พื้นที่วาดวงจร"></canvas>
       <div id="status"></div>
       <div id="hint"></div>
+      <div id="stu" aria-label="ข้อมูลผู้ทดลอง"></div>
       <div id="toast" role="status"></div>
       <div id="props" hidden></div>
       <aside id="ws" hidden aria-label="ใบงาน"></aside>
@@ -462,6 +548,7 @@ body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
     <section id="scopePanel" aria-label="ออสซิลโลสโคป">
       <div class="sp-head">
         <span class="sp-title">ออสซิลโลสโคป<small>2 ช่อง</small></span>
+        <div id="stu2" aria-label="ข้อมูลผู้ทดลอง"></div>
         <button id="scAuto" class="kbtn">AUTO</button>
         <button id="scHold" class="kbtn">STOP</button>
         <button id="scFull" class="kbtn fsb" aria-label="ขยายออสซิลโลสโคปเต็มจอ" title="สโคปเต็มจอ"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="i-in" d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/><path class="i-out" d="M7 3v4H3M17 7h-4V3M13 17v-4h4M3 13h4v4"/></svg></button>
@@ -516,6 +603,7 @@ body.cv-full #props{top:56px;max-height:calc(100% - 66px)}
 </div>
 <div id="menu" class="sheet" hidden role="dialog" aria-label="ตั้งค่า">
   <div class="sh"><h2>ตั้งค่าและวิธีใช้</h2><button class="x" data-close aria-label="ปิด">✕</button></div>
+  <div class="opt"><span id="menuWho">ผู้ใช้งาน</span><button id="btnLogout" class="lg-out">ออกจากระบบ</button></div>
   <label class="opt m-show"><span>ความเร็วการจำลอง</span><span class="spd2"><input type="range" id="speed2" min="-1.5" max="1.5" step="0.05" value="0" aria-label="ความเร็วการจำลอง"><output id="spdOut2">1×</output></span></label>
   <label class="opt"><span>แสดงชื่อและค่าอุปกรณ์</span><input type="checkbox" id="optVal" checked></label>
   <label class="opt"><span>ระบายสีสายตามแรงดัน (เขียว = บวก, แดง = ลบ)</span><input type="checkbox" id="optVcol" checked></label>
@@ -3142,6 +3230,44 @@ $('#pwForm').addEventListener('submit', e => {
     $('#pwErr').hidden = false; inp.classList.remove('bad'); void inp.offsetWidth; inp.classList.add('bad'); inp.select();
   }
 });
+
+/* ---------- student login ---------- */
+const LG_KEY = 'circuitsim-student';
+const lgGet = () => { try { return JSON.parse(sessionStorage.getItem(LG_KEY) || 'null'); } catch (e) { return window.__stu || null; } };
+const lgSet = v => { window.__stu = v; try { v ? sessionStorage.setItem(LG_KEY, JSON.stringify(v)) : sessionStorage.removeItem(LG_KEY); } catch (e) {} };
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function showStudent(st) {
+  document.body.classList.toggle('logged', !!st);
+  $('#login').hidden = !!st;
+  if (!st) return;
+  const [code, sub] = st.sub.split('|');
+  $('#stu').innerHTML = `<div class="n">${esc(st.name)}</div><div class="i">รหัส <b>${esc(st.id)}</b> · ${esc(st.lv)} · เข้า ${esc(st.t)}</div><div class="s"><b>${esc(code)}</b> ${esc(sub)}</div>`;
+  $('#stu2').innerHTML = `<span class="n">${esc(st.name)}</span><span>รหัส <b>${esc(st.id)}</b></span><span>${esc(st.lv)}</span><span><b>${esc(code)}</b> ${esc(sub)}</span><span>เข้า ${esc(st.t)}</span>`;
+  $('#menuWho').textContent = `${st.name} (${st.id})`;
+  requestAnimationFrame(() => { resize(); fitView(); });
+}
+$('#lgId').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11); });
+$('#lgForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = $('#lgForm'), id = $('#lgId').value.trim(), name = $('#lgName').value.trim().replace(/\s+/g, ' ');
+  const lv = (f.querySelector('input[name=lgLv]:checked') || {}).value, sub = (f.querySelector('input[name=lgSub]:checked') || {}).value;
+  const ok = { lgId: /^\d{11}$/.test(id), lgName: name.length >= 3, lgLv: !!lv, lgSub: !!sub };
+  f.querySelectorAll('.lg-err').forEach(m => m.closest('.lg-f').classList.toggle('bad', !ok[m.dataset.for]));
+  const first = Object.keys(ok).find(k => !ok[k]);
+  if (first) { const el = first === 'lgLv' || first === 'lgSub' ? f.querySelector(`input[name=${first}]`) : $('#' + first); el.focus(); return; }
+  const d = new Date(), t = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) + ' ' + d.toTimeString().slice(0, 5);
+  const st = { id, name, lv, sub, t };
+  lgSet(st); showStudent(st);
+  if (UI.mode !== 'exp') setMode('exp');
+  toast('ยินดีต้อนรับ ' + name);
+});
+$('#lgForm').addEventListener('change', e => { if (e.target.type !== 'radio') return; const g = e.target.closest('.lg-f'); if (g) g.classList.remove('bad'); });
+$('#btnLogout').addEventListener('click', () => {
+  lgSet(null); closeSheets(); try { sessionStorage.removeItem('circuitsim-exunlock'); } catch (e) {}
+  $('#lgForm').reset(); $('#lgForm').querySelectorAll('.lg-f').forEach(g => g.classList.remove('bad'));
+  showStudent(null); setTimeout(() => $('#lgId').focus(), 50);
+});
+showStudent(lgGet());
 
 /* ---------- boot ---------- */
 new ResizeObserver(() => resize()).observe(cv); new ResizeObserver(() => resize()).observe(sc);
