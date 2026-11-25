@@ -466,12 +466,88 @@ body.sc-full.mode-exp.logged .sp-head{flex-wrap:wrap}
 .dtog.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .dtog+.x{margin-left:4px}
 body.no-desc #props .role,body.no-desc #props .desc{display:none}
+.lg-adm{display:grid;gap:8px;border-bottom:1px dashed var(--border);padding-bottom:10px;margin-top:-6px}
+.lg-skip{justify-self:end;border:0;background:none;color:var(--muted);font:600 13.5px var(--ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 8px}
+.lg-skip:hover{color:var(--accent)}
+.lg-admrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.lg-admrow[hidden]{display:none}
+#lgPw{height:42px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--fg);font:600 18px var(--mono);letter-spacing:.25em;text-align:center;min-width:0}
+#lgPw:focus{outline:2px solid var(--accent);outline-offset:1px}
+#lgPw.bad{border-color:var(--danger);animation:pwshake .3s}
+#lgAdmGo{height:42px;padding:0 16px;border:0;border-radius:10px;background:var(--fg);color:var(--panel);font:700 14px var(--ui);cursor:pointer}
+.lg-err2{color:var(--danger);font-size:12.5px;font-style:normal;text-align:center}
+#stu.adm{border-left-color:#d4902a}
+#stu.adm .n{font-size:14.5px}
+#stu .clk{font-family:var(--mono);font-size:12px;color:var(--muted)}
+body.no-props #props{display:none!important}
+/* ===== I/O panel on the full-screen oscilloscope ===== */
+#ioPanel{display:none}
+body.sc-full #ioPanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-height:0;overflow:auto;margin-top:10px;color:var(--bezel-fg)}
+body.sc-full .sp-body{grid-template-areas:"scope ctl" "scope meas" "io meas";grid-template-rows:auto minmax(0,1fr) auto}
+body.sc-full .scope-wrap{grid-area:scope}
+body.sc-full .sc-ctl{grid-area:ctl}
+body.sc-full .meas{grid-area:meas}
+body.sc-full #ioPanel{grid-area:io;max-height:34vh}
+.io-grp{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px;min-width:0}
+.io-grp h4{margin:0 0 6px;font-size:12px;letter-spacing:.02em;color:#9fb0c3;display:flex;align-items:center;gap:6px}
+.io-grp h4 i{width:8px;height:8px;border-radius:50%;background:#ffc21a;display:inline-block}
+.io-grp.out h4 i{background:#38d6f0}
+.io-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:6px}
+.io-it{display:grid;gap:4px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);min-width:0}
+.io-it .lb{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;color:#c9d4e0;white-space:nowrap;overflow:hidden}
+.io-it .lb b{font-family:var(--mono);color:#fff}
+.io-it .lb span{overflow:hidden;text-overflow:ellipsis}
+.io-it .vv{font:700 13px var(--mono);color:#fff;display:flex;align-items:center;gap:8px;min-height:24px}
+.io-btn{height:30px;border-radius:7px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:700 12.5px var(--ui);cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+.io-btn.on{background:#2fbf71;border-color:#2fbf71;color:#04210f}
+.io-btn.pb.on{background:#ffc21a;border-color:#ffc21a;color:#2a1d00}
+.io-it input[type=range]{width:100%;accent-color:#ffc21a;margin:0}
+.io-row{display:flex;gap:4px}
+.io-row .io-btn{flex:1;height:26px;font-size:12px}
+.io-dot{width:20px;height:20px;border-radius:50%;flex:none;border:1px solid rgba(255,255,255,.25)}
+.io-bulb{width:22px;height:22px;border-radius:50%;flex:none;border:1px solid rgba(255,255,255,.25)}
+.io-fan{width:22px;height:22px;flex:none}
+.io-hex{font:800 22px var(--mono);color:#ff3326;background:#0b0b0b;border-radius:4px;padding:0 6px;text-shadow:0 0 6px #ff3326}
+.io-empty{font-size:12px;color:#8a9bb0;padding:4px 2px}
+@media (max-width:900px) and (orientation:portrait), (max-width:640px){
+  body.sc-full .sp-body{grid-template-areas:none;grid-template-rows:none}
+  body.sc-full .sp-body>*{grid-area:auto!important;min-height:min-content}
+  body.sc-full .sp-body{display:flex!important;flex-direction:column;overflow-y:auto}
+  body.sc-full .sp-body>*{flex:none}
+  body.sc-full .scope-wrap{order:0;height:min(42dvh,360px)}
+  body.sc-full #ioPanel{order:1;grid-template-columns:minmax(0,1fr);max-height:none;overflow:visible;min-height:min-content}
+  body.sc-full .sc-ctl{order:2}
+  body.sc-full .meas{order:3}
+}
+@media (max-height:540px) and (orientation:landscape) and (min-width:641px){
+  body.sc-full .sp-body{grid-template-areas:"scope ctl" "io ctl";grid-template-rows:minmax(0,1fr) auto}
+  body.sc-full #ioPanel{max-height:38vh;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .io-list{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+.io-sym{height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,.03)}
+.io-sym svg{height:40px;width:80px;overflow:visible}
+.io-sym.click{cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;border:1px dashed rgba(255,255,255,.18)}
+.io-sym.click:hover{background:rgba(255,255,255,.08)}
+.io-sym.click:active{transform:scale(.97)}
+.io-tx{font:700 12px var(--mono);color:#9fb0c3;text-align:center;min-height:16px}
+.io-tx.lit{color:#5dff7a}
+.io-waves path{animation:iowv .6s infinite alternate}
+.io-waves path:nth-child(2){animation-delay:.15s}.io-waves path:nth-child(3){animation-delay:.3s}
+@keyframes iowv{from{opacity:.2}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div id="login" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
   <form id="lgForm" class="lg-card" novalidate autocomplete="off">
+    <div class="lg-adm">
+      <button type="button" id="lgSkip" class="lg-skip">ข้าม — สำหรับผู้ดูแล (Admin)</button>
+      <div id="lgAdm" class="lg-admrow" hidden>
+        <input id="lgPw" type="password" inputmode="numeric" maxlength="20" placeholder="รหัสผู้ดูแล" aria-label="รหัสผู้ดูแล" autocomplete="off">
+        <button type="button" id="lgAdmGo">เข้าใช้งาน</button>
+      </div>
+      <em id="lgPwErr" class="lg-err2" hidden>รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง</em>
+    </div>
     <div class="lg-head"><svg width="44" height="44" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="8" fill="#2b323b"/><path d="M5 20 L10 20 L12.5 12 L16 24 L19 14 L21 20 L29 20" fill="none" stroke="#ffc21a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="25" cy="20" r="1.8" fill="#38d6f0"/></svg><div><h1 id="lgTitle">Electronics Circuit <span>by Suriya PTC</span></h1><p>จำลองวงจรอิเล็กทรอนิกส์ ช่างอิเล็กฯ วท.พนมสารคาม</p></div></div>
     <h2>ลงชื่อเข้าใช้งาน</h2>
     <label class="lg-f"><span>รหัสนักศึกษา (11 หลัก)</span>
@@ -533,6 +609,7 @@ body.no-desc #props .role,body.no-desc #props .desc{display:none}
       <button data-tool="p1"><i class="probe-dot" style="background:#ffc21a">1</i><span>โพรบ 1</span></button>
       <button data-tool="p2"><i class="probe-dot" style="background:#38d6f0">2</i><span>โพรบ 2</span></button>
       <button id="tInfo" aria-label="เปิด/ปิดคำอธิบายอุปกรณ์" title="เปิด/ปิดคำอธิบายอุปกรณ์"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5"/><circle cx="10" cy="6.2" r=".6" fill="currentColor"/></svg><span>คำอธิบาย</span></button>
+      <button id="tProps" aria-label="เปิด/ปิดแผงข้อมูลอุปกรณ์" title="เปิด/ปิดแผงข้อมูลอุปกรณ์เมื่อแตะเลือก"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="13" rx="2"/><path d="M3 7.5h14M6 11h5M6 13.5h8" stroke-linecap="round"/></svg><span>ข้อมูล</span></button>
       <button id="tProbeOff" class="edit-only" aria-label="ยกเลิกโพรบ" title="ยกเลิกโพรบ (เลือกโพรบ 1 หรือ 2 ไว้ก่อนเพื่อยกเลิกเฉพาะช่องนั้น)"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="8" cy="8" r="4.5"/><path d="M11.3 11.3L17 17"/><path d="M13.5 3.5l4 4M17.5 3.5l-4 4" stroke="#e5484d"/></svg><span>ล้างโพรบ</span></button>
       <button data-tool="del" class="edit-only"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11"/></svg><span>ลบ</span></button>
       <div class="sep"></div>
@@ -581,6 +658,7 @@ body.no-desc #props .role,body.no-desc #props .desc{display:none}
             <div class="row"><span>TRIG</span><select id="trigSel" aria-label="แหล่งทริกเกอร์"><option value="0">CH1 ขอบขาขึ้น</option><option value="1">CH2 ขอบขาขึ้น</option><option value="-1">ปิด (Roll)</option></select><input id="trigLv" inputmode="decimal" aria-label="ระดับทริกเกอร์ (V)" title="ระดับทริกเกอร์ (V)"></div></div>
         </div>
         <div class="meas" id="meas"></div>
+        <div id="ioPanel" class="io" aria-label="อุปกรณ์อินพุตและเอาต์พุต"></div>
       </div>
     </section>
   </div>
@@ -705,7 +783,7 @@ const DEF = {
   NOR: gateDef('NOR Gate', 2), XOR: gateDef('XOR Gate', 2), XNOR: gateDef('XNOR Gate', 2),
   DFF: { n: 'D Flip-Flop', pf: 'U', t: [[-2, -1], [-2, 1], [2, -1], [2, 1]], tn: ['D', 'CLK', 'Q', 'Q̄'], box: [-2, -1.8, 2, 1.8], p: {}, d: 'Q รับค่า D ที่ขอบขาขึ้นของ CLK' },
   JKFF: { n: 'JK Flip-Flop', pf: 'U', t: [[-2, -1], [-2, 0], [-2, 1], [2, -1], [2, 1]], tn: ['J', 'CLK', 'K', 'Q', 'Q̄'], box: [-2, -1.8, 2, 1.8], p: {}, d: 'J=K=1 จะสลับสถานะ (Toggle) ทุกขอบขาขึ้น' },
-  T555: { n: 'ไอซีไทเมอร์ 555', pf: 'U', t: [[-3, -1], [-3, 0], [-3, 1], [3, 0], [0, -3], [0, 3]], tn: ['DIS', 'THR', 'TRIG', 'OUT', 'VCC', 'GND'], box: [-3, -3, 3, 3], p: {}, d: 'TRIG < ⅓VCC → OUT สูง, THR > ⅔VCC → OUT ต่ำและ DIS ลงกราวด์' },
+  T555: { n: 'ไอซีไทเมอร์ 555', pf: 'U', t: [[-3, -1], [-3, 0], [-3, 1], [3, 0], [0, -3], [0, 3], [3, 2]], tn: ['DIS', 'THR', 'TRIG', 'OUT', 'VCC', 'GND', 'CV'], box: [-3, -3, 3, 3], p: {}, d: 'TRIG < ⅓VCC → OUT สูง, THR > ⅔VCC → OUT ต่ำและ DIS ลงกราวด์ · ขา CV (ขา 5) คือระดับ ⅔VCC ภายใน ต่อตัวเก็บประจุ 0.01 µF ลงกราวด์เพื่อกันสัญญาณรบกวน หรือป้อนแรงดันเพื่อปรับความถี่' },
   CNT4: { n: 'ตัวนับไบนารี 4 บิต', pf: 'U', t: [[-3, -1], [-3, 1], [3, -2], [3, -1], [3, 0], [3, 1]], tn: ['CLK', 'RST', 'Q0', 'Q1', 'Q2', 'Q3'], box: [-3, -3, 3, 2], p: {}, d: 'นับขึ้นทุกขอบขาขึ้นของ CLK, RST = 1 รีเซ็ตเป็น 0' },
   HEX: { n: 'ตัวแสดงผล 7 ส่วน (HEX)', pf: 'DS', t: [[-3, -2], [-3, -1], [-3, 0], [-3, 1]], tn: ['D0', 'D1', 'D2', 'D3'], box: [-3, -3, 2, 3], p: {}, d: 'แสดงเลขฐานสิบหก 0–F จากอินพุต 4 บิต' },
 };
@@ -911,11 +989,11 @@ function makeEl(c, nd, allocVS) {
     }
     case 'T555': {
       if (st.q == null) { st.q = false; st.vcc = 0; }
-      const [nDis, nThr, nTr, nOut, nVcc, nGnd] = nd;
+      const [nDis, nThr, nTr, nOut, nVcc, nGnd, nCv] = nd, gA = 1 / 5000, gB = 1 / 10000; // internal 5k / (5k+5k) divider: CV = ⅔VCC
       return {
-        pre: x => { const g0 = V(x, nGnd), vcc = V(x, nVcc) - g0; st.vcc = Math.max(0, vcc); if (vcc > 1) { if (V(x, nTr) - g0 < vcc / 3) st.q = true; else if (V(x, nThr) - g0 > 2 * vcc / 3) st.q = false; } },
-        lin: (A, B, N) => { nort(A, B, N, nOut, nGnd, st.q, st.vcc, 10); sG(A, N, nDis, nGnd, st.q ? 1e-9 : 0.2); sG(A, N, nVcc, nGnd, 1 / 5000); },
-        cur: x => { const g0 = V(x, nGnd), io = (V(x, nOut) - g0 - (st.q ? st.vcc : 0)) / 10, id = (V(x, nDis) - g0) * (st.q ? 1e-9 : 0.2), iv = (V(x, nVcc) - g0) / 5000; return [id, 0, 0, io, iv, -(id + io + iv)]; }
+        pre: x => { const g0 = V(x, nGnd), vcc = V(x, nVcc) - g0, vth = nCv != null ? V(x, nCv) - g0 : 2 * vcc / 3; st.vcc = Math.max(0, vcc); if (vcc > 1) { if (V(x, nTr) - g0 < vth / 2) st.q = true; else if (V(x, nThr) - g0 > vth) st.q = false; } },
+        lin: (A, B, N) => { nort(A, B, N, nOut, nGnd, st.q, st.vcc, 10); sG(A, N, nDis, nGnd, st.q ? 1e-9 : 0.2); sG(A, N, nVcc, nGnd, 1 / 15000); if (nCv != null) { sG(A, N, nVcc, nCv, gA); sG(A, N, nCv, nGnd, gB); } },
+        cur: x => { const g0 = V(x, nGnd), io = (V(x, nOut) - g0 - (st.q ? st.vcc : 0)) / 10, id = (V(x, nDis) - g0) * (st.q ? 1e-9 : 0.2), vc = nCv != null ? V(x, nCv) : g0, ia = (V(x, nVcc) - vc) * gA, ib = (vc - g0) * gB, iv = (V(x, nVcc) - g0) / 15000 + ia, icv = ib - ia; return [id, 0, 0, io, iv, -(id + io + iv + icv), icv]; }
       };
     }
     case 'LPROBE': case 'HEX': return { cur: () => nd.map(() => 0) };
@@ -2175,6 +2253,53 @@ Object.assign(INFO, {
   'ใบงานที่ 6/3 (ข) 555 วงจรไซเรนสองเสียง': { type: 'วงจรกำเนิดเสียงไซเรน (มอดูเลตความถี่)', use: 'เสียงเตือนภัย ไซเรนของเล่น สัญญาณกันขโมย', parts: { U1: '555 อะสเตเบิลความถี่ต่ำ ≈ 1 Hz', R1: 'ตัวต้านทานกำหนดเวลา U1', R2: 'ตัวต้านทานกำหนดเวลา U1', C1: 'ตัวเก็บประจุกำหนดเวลา U1', R5: 'ป้อนสัญญาณจาก U1 ไปเปลี่ยนความถี่ U2 (18 kΩ)', U2: '555 อะสเตเบิลความถี่เสียง ≈ 1 kHz', R3: 'ตัวต้านทานกำหนดเวลา U2', R4: 'ตัวต้านทานกำหนดเวลา U2', C2: 'ตัวเก็บประจุกำหนดเวลา U2', R6: 'ตัวต้านทานเบส', Q1: 'ทรานซิสเตอร์ขยายกระแสขับลำโพง', SP1: 'ลำโพง 8 Ω', VCC: 'แหล่งจ่าย 9 V' } },
 });
 EX.forEach(e => { if (!e.info && INFO[e.name]) e.info = INFO[e.name]; });
+
+/* ================= 555 pin 5 (CV): capacitor to ground in every 555 circuit ================= */
+{
+  // worksheet 7: move the trigger/START wiring down 2 grid units so the CV capacitor's ground does not touch it
+  const w7 = EX.find(e => e.name === 'ใบงานที่ 7 วงจรไอซีไทเมอร์ตั้งเวลาพร้อมบัซเซอร์');
+  if (w7) {
+    w7.parts = w7.parts.map(p => p[0] === 'START' ? ['START', 'PB', 20, 22, 1] : p);
+    w7.w = w7.w.map(path => JSON.stringify(path) === JSON.stringify(['R1.2', [30, 18], [20, 18], [20, 13], 'U1.TRIG']) ? ['R1.2', [30, 20], [20, 20], [20, 13], 'U1.TRIG'] : JSON.stringify(path) === JSON.stringify([[20, 18], 'START.1']) ? [[20, 20], 'START.1'] : path);
+  }
+  // siren: U1 now modulates U2 through its CV pin (R5 → U2 pin 5), the classic two-tone siren connection
+  const sir = EX.find(e => e.name === 'ใบงานที่ 6/3 (ข) 555 วงจรไซเรนสองเสียง');
+  if (sir) {
+    sir.parts = sir.parts.map(p => p[0] === 'R5' ? ['R5', 'R', 20, 16, 0, { R: 10000 }] : p);
+    sir.w = sir.w.filter(path => !(path[0] === 'U1.OUT' && path[1] === 'R5.1') && !(path[0] === 'R5.2' && path[1] === 'R4.2'));
+    sir.w.push(['U1.OUT', [16, 8], [16, 16], 'R5.1'], ['R5.2', [35, 16], [35, 10], [33, 10]]);
+    sir.desc = 'U1 เป็นอะสเตเบิลความถี่ต่ำ ≈ 1 Hz ป้อนเอาต์พุตผ่าน R5 10 kΩ เข้าขา 5 (CV) ของ U2 (อะสเตเบิลความถี่เสียง) แรงดันอ้างอิงภายใน U2 จึงสลับสูง–ต่ำ เสียงเปลี่ยนสองระดับแบบไซเรน C4 10 µF ที่ขา 5 ทำให้เสียงเลื่อนนุ่มขึ้น ทรานซิสเตอร์ Q1 ขับลำโพง (เปิดเสียงในเมนู ⋯)';
+    sir.ws.tools = ['ไอซี NE555 × 2 (U1, U2)', 'ตัวต้านทาน 1 kΩ × 2, 6.8 kΩ, 10 kΩ × 2, 68 kΩ', 'ตัวเก็บประจุ 10 µF (C1), 0.1 µF (C2), 0.01 µF (C3 ขา 5 ของ U1), 10 µF (C4 ขา 5 ของ U2)', 'ทรานซิสเตอร์ NPN (Q1)', 'ลำโพง 8 Ω (SP1)', 'แหล่งจ่ายไฟกระแสตรง 9 V (VCC)', 'ออสซิลโลสโคป'];
+    sir.ws.steps = ['ประกอบวงจรตามรูป ตั้ง VCC = 9 V เปิดเสียงลำโพงในเมนู ⋯', 'ดูสัญญาณ U1 (CH1) และ U2 (CH2) อ่านความถี่ของ U2 ขณะ U1 เป็น "1" และ "0" บันทึก', 'แตะ R5 เปลี่ยนเป็น 4.7 kΩ และ 22 kΩ ฟังเสียงและบันทึกความถี่', 'แตะ C4 เปลี่ยนเป็น 0.01 µF และ 47 µF สังเกตว่าเสียงเปลี่ยนแบบกระโดดหรือเลื่อนช้า ๆ'];
+    sir.ws.table = { head: ['R5', 'f(U2) เมื่อ U1 = 1 (Hz)', 'f(U2) เมื่อ U1 = 0 (Hz)', 'ลักษณะเสียง'], rows: [['10 kΩ'], ['4.7 kΩ'], ['22 kΩ']] };
+    sir.ws.q = ['f(U1) = 1.44 / ((R1 + 2R2) C1) ≈ 1 Hz เป็นจังหวะการสลับเสียง', 'ขา 5 (CV) คือแรงดันอ้างอิง ⅔VCC ภายใน เมื่อ U1 = 1 แรงดัน CV สูงขึ้น ตัวเก็บประจุ C2 ต้องอัดประจุนานขึ้น ความถี่ U2 จึงต่ำลง', 'R5 น้อย เสียงสองระดับต่างกันมาก, C4 มาก เสียงเลื่อนช้า (เสียงหอน)'];
+  }
+  const CVC = { 'ใบงานที่ 6 วงจรโมโนสเตเบิลด้วยไอซี 555': ['C2', 1e-8], 'ใบงานที่ 7 วงจรไอซีไทเมอร์ตั้งเวลาพร้อมบัซเซอร์': ['C1', 1e-7], 'ใบงานที่ 8.1 วงจรกำเนิดสัญญาณด้วย IC 555': ['C2', 1e-8] };
+  const role = v => `ตัวเก็บประจุ ${v >= 1e-6 ? (v * 1e6) + ' µF' : (v * 1e6).toFixed(2).replace(/0+$/, '') + ' µF'} ต่อขา 5 (CV) ลงกราวด์ กันสัญญาณรบกวนให้ระดับเปรียบเทียบ ⅔VCC คงที่`;
+  EX.forEach(e => {
+    if (e.parts) {
+      const us = e.parts.filter(p => p[1] === 'T555'); if (!us.length) return;
+      const used = new Set(e.parts.map(p => p[0]));
+      us.forEach((u, k) => {
+        let [ref, val] = CVC[e.name] && k === 0 ? CVC[e.name] : [null, 1e-8];
+        if (e === sir && u[0] === 'U2') val = 10e-6;
+        if (!ref || used.has(ref)) { let n = 1; while (used.has('C' + n)) n++; ref = 'C' + n; }
+        used.add(ref);
+        e.parts.push([ref, 'C', u[2] + 3, u[3] + 4, 1, { C: val }]);
+        e.gnd = (e.gnd || []).concat([ref + '.2']);
+        if (e.info && e.info.parts) e.info.parts[ref] = e === sir && u[0] === 'U2' ? 'ตัวเก็บประจุ 10 µF ขา 5 (CV) ของ U2 รับแรงดันจาก U1 ผ่าน R5 ทำให้เสียงเลื่อนนุ่ม' : role(val) + (us.length > 1 ? ` (${u[0]})` : '');
+        if (e.ws && Array.isArray(e.ws.tools) && !CVC[e.name] && e !== sir) e.ws.tools.push(`ตัวเก็บประจุ ${val >= 1e-6 ? val * 1e6 + ' µF' : '0.01 µF'} (${ref}) ต่อขา 5 (CV) ลงกราวด์`);
+      });
+    } else if (e.comps && e.comps.some(c => c[0] === 'T555')) {
+      e.comps.filter(c => c[0] === 'T555').forEach(u => { e.comps.push(['C', u[1] + 3, u[2] + 4, 1, { C: 1e-8 }], ['GND', u[1] + 3, u[2] + 6, 0]); });
+    }
+  });
+  const w6 = EX.find(e => e.name === 'ใบงานที่ 6 วงจรโมโนสเตเบิลด้วยไอซี 555');
+  if (w6) w6.ws.tools = w6.ws.tools.map(t => t.replace('(C2 ต่อขา 5 ในวงจรจริง)', '(C2 0.01 µF ต่อขา 5 ลงกราวด์)'));
+  if (w7) { w7.ws.tools = w7.ws.tools.map(t => t.replace('ตัวเก็บประจุ 0.1 µF (ขา 5 ในวงจรจริง), 470 µF (C2)', 'ตัวเก็บประจุ 0.1 µF (C1 ต่อขา 5 ลงกราวด์), 470 µF (C2)')); w7.info.parts.C1 = role(1e-7); }
+  const w81 = EX.find(e => e.name === 'ใบงานที่ 8.1 วงจรกำเนิดสัญญาณด้วย IC 555');
+  if (w81) w81.ws.tools = w81.ws.tools.map(t => t.replace('ตัวเก็บประจุ 0.01 µF, 0.056 µF, 0.1 µF (C1)', 'ตัวเก็บประจุ 0.01 µF, 0.056 µF, 0.1 µF (C1) และ 0.01 µF (C2 ต่อขา 5 ลงกราวด์)'));
+}
 
 /* ================= UI / RENDERING ================= */
 const G = 20, PI = Math.PI;
@@ -3710,10 +3835,20 @@ const LG_KEY = 'circuitsim-student';
 const lgGet = () => { try { return JSON.parse(sessionStorage.getItem(LG_KEY) || 'null'); } catch (e) { return window.__stu || null; } };
 const lgSet = v => { window.__stu = v; try { v ? sessionStorage.setItem(LG_KEY, JSON.stringify(v)) : sessionStorage.removeItem(LG_KEY); } catch (e) {} };
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const thNow = () => { const d = new Date(); return d.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' เวลา ' + d.toTimeString().slice(0, 8) + ' น.'; };
+setInterval(() => document.querySelectorAll('.clk').forEach(e => e.textContent = thNow()), 1000);
 function showStudent(st) {
   document.body.classList.toggle('logged', !!st);
   $('#login').hidden = !!st;
+  $('#stu').classList.toggle('adm', !!(st && st.admin));
   if (!st) return;
+  if (st.admin) {
+    $('#stu').innerHTML = `<span class="grip" aria-hidden="true"></span><div class="n">ยินดีต้อนรับ นายสุริยะ ชาวเวียง (ครูบอย)</div><div class="s">ช่างอิเล็กทรอนิกส์ วิทยาลัยเทคนิคพนมสารคาม</div><div class="clk">${thNow()}</div>`;
+    $('#stu2').innerHTML = `<span class="n">ยินดีต้อนรับ นายสุริยะ ชาวเวียง (ครูบอย)</span><span>ช่างอิเล็กทรอนิกส์ วิทยาลัยเทคนิคพนมสารคาม</span><span class="clk">${thNow()}</span>`;
+    $('#menuWho').textContent = 'ครูบอย (ผู้ดูแล)';
+    requestAnimationFrame(() => { resize(); fitView(); });
+    return;
+  }
   const [code, sub] = st.sub.split('|');
   $('#stu').innerHTML = `<span class="grip" aria-hidden="true"></span><div class="n">${esc(st.name)}</div><div class="i">รหัส <b>${esc(st.id)}</b> · ${esc(st.lv)} · เข้า ${esc(st.t)}</div><div class="s"><b>${esc(code)}</b> ${esc(sub)}</div>`;
   $('#stu2').innerHTML = `<span class="n">${esc(st.name)}</span><span>รหัส <b>${esc(st.id)}</b></span><span>${esc(st.lv)}</span><span><b>${esc(code)}</b> ${esc(sub)}</span><span>เข้า ${esc(st.t)}</span>`;
@@ -3967,6 +4102,134 @@ $('#tInfo').addEventListener('click', () => {
     e.stopImmediatePropagation(); on = !on; apply(); try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (err) { }
     showProps(); toast(on ? 'แสดงคำอธิบายอุปกรณ์เมื่อเลือก' : 'ซ่อนคำอธิบายอุปกรณ์เมื่อเลือก');
   }, true);
+}
+
+/* ---------- admin skip on the login page ---------- */
+{
+  const go = () => {
+    const inp = $('#lgPw');
+    if (pwHash(inp.value.trim()) === PW_H) {
+      window.__exOK = true; try { sessionStorage.setItem(PW_KEY, String(PW_H)); } catch (e) { }
+      const st = { admin: true, id: '-', name: 'ครูบอย', lv: '-', sub: '-|-', t: '' };
+      lgSet(st); showStudent(st); inp.value = ''; $('#lgAdm').hidden = true; $('#lgPwErr').hidden = true;
+      if (UI.mode !== 'exp') setMode('exp');
+      toast('ยินดีต้อนรับ ครูบอย');
+    } else { $('#lgPwErr').hidden = false; inp.classList.remove('bad'); void inp.offsetWidth; inp.classList.add('bad'); inp.select(); }
+  };
+  $('#lgSkip').addEventListener('click', () => { const a = $('#lgAdm'); a.hidden = !a.hidden; $('#lgPwErr').hidden = true; if (!a.hidden) setTimeout(() => $('#lgPw').focus(), 30); });
+  $('#lgAdmGo').addEventListener('click', go);
+  $('#lgPw').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); go(); } });
+}
+
+/* ---------- show/hide the whole selection panel (both modes) ---------- */
+{
+  const KEY = 'circuitsim-props';
+  let on = true; try { on = localStorage.getItem(KEY) !== '0'; } catch (e) { }
+  const apply = () => { document.body.classList.toggle('no-props', !on); $('#tProps').classList.toggle('on', on); $('#tProps').setAttribute('aria-pressed', on); };
+  apply();
+  $('#tProps').addEventListener('click', () => {
+    on = !on; apply(); try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) { }
+    if (on && UI.sel) showProps();
+    toast(on ? 'แสดงแผงข้อมูลอุปกรณ์เมื่อแตะเลือก' : 'ซ่อนแผงข้อมูลอุปกรณ์ (แตะอุปกรณ์ยังเลือก/กดสวิตช์ได้)');
+  });
+}
+
+/* ---------- input / output devices panel on the full-screen oscilloscope (symbols) ---------- */
+{
+  const IN_T = new Set(['SW', 'PB', 'LSW', 'POT', 'VADJ', 'FG']), OUT_T = new Set(['LED', 'LAMP', 'MOTOR', 'BUZ', 'SPK', 'RELAY', 'LPROBE', 'HEX', 'VM', 'AM']);
+  const isIn = c => IN_T.has(c.t) || (c.p && c.p.light != null), isOut = c => OUT_T.has(c.t);
+  const el = $('#ioPanel'); let sig = '';
+  const nm = c => (DEF[c.t] || {}).n || c.t;
+  const nv = (c, j) => c._nd ? nodeV(c._nd[j]) : 0;
+  const ref = r => S.comps.find(c => c.ref === r);
+  const W = '#dfe7f0', DIM = '#5b6878', ON = '#2fbf71';
+  /* ---- input symbols ---- */
+  const swSym = on => `<svg viewBox="0 0 80 40"><line x1="2" y1="28" x2="16" y2="28" stroke="${W}" stroke-width="3"/><line x1="64" y1="28" x2="78" y2="28" stroke="${W}" stroke-width="3"/><circle cx="18" cy="28" r="4" fill="#0e1318" stroke="${W}" stroke-width="2.5"/><circle cx="62" cy="28" r="4" fill="#0e1318" stroke="${W}" stroke-width="2.5"/><line x1="18" y1="28" x2="${on ? 60 : 56}" y2="${on ? 26 : 6}" stroke="${on ? ON : '#ffc21a'}" stroke-width="4" stroke-linecap="round"/></svg>`;
+  const pbSym = on => { const y = on ? 22 : 12; return `<svg viewBox="0 0 80 40"><line x1="2" y1="30" x2="16" y2="30" stroke="${W}" stroke-width="3"/><line x1="64" y1="30" x2="78" y2="30" stroke="${W}" stroke-width="3"/><circle cx="18" cy="30" r="4" fill="#0e1318" stroke="${W}" stroke-width="2.5"/><circle cx="62" cy="30" r="4" fill="#0e1318" stroke="${W}" stroke-width="2.5"/><line x1="12" y1="${y + 4}" x2="68" y2="${y + 4}" stroke="${on ? '#ffc21a' : W}" stroke-width="4" stroke-linecap="round"/><line x1="40" y1="${y + 4}" x2="40" y2="${y - 6}" stroke="${on ? '#ffc21a' : W}" stroke-width="3"/><rect x="30" y="${y - 10}" width="20" height="6" rx="2" fill="${on ? '#ffc21a' : W}"/></svg>`; };
+  const lswSym = on => `<svg viewBox="0 0 80 40"><rect x="8" y="8" width="64" height="24" rx="12" fill="${on ? ON : '#26303b'}" stroke="${W}" stroke-width="2"/><circle cx="${on ? 60 : 20}" cy="20" r="9" fill="#fff"/><text x="${on ? 26 : 50}" y="25" text-anchor="middle" font-size="14" font-weight="800" fill="#fff" font-family="monospace">${on ? 1 : 0}</text></svg>`;
+  const knobSym = (f, col) => { const a = (-135 + 270 * clamp(f, 0, 1)) * PI / 180, x = 40 + Math.sin(a) * 12, y = 22 - Math.cos(a) * 12, a0 = -225 * PI / 180, ex = 40 + Math.cos(a0 + 270 * clamp(f, 0, 1) * PI / 180) * 17, ey = 22 + Math.sin(a0 + 270 * clamp(f, 0, 1) * PI / 180) * 17, big = f > 2 / 3 ? 1 : 0; return `<svg viewBox="0 0 80 40"><path d="M ${40 + Math.cos(a0) * 17} ${22 + Math.sin(a0) * 17} A 17 17 0 1 1 ${40 + Math.cos(a0 + 1.5 * PI) * 17} ${22 + Math.sin(a0 + 1.5 * PI) * 17}" fill="none" stroke="#33404d" stroke-width="3"/>${f > .005 ? `<path d="M ${40 + Math.cos(a0) * 17} ${22 + Math.sin(a0) * 17} A 17 17 0 ${big} 1 ${ex} ${ey}" fill="none" stroke="${col}" stroke-width="3"/>` : ''}<circle cx="40" cy="22" r="13" fill="#1b1f25" stroke="${W}" stroke-width="2"/><line x1="40" y1="22" x2="${x}" y2="${y}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/></svg>`; };
+  const fgSym = c => { const w = c.p.wave || 'sine'; const d = w === 'square' || w === 'pulse' ? 'M10 28 H22 V12 H40 V28 H58 V12 H70' : w === 'tri' || w === 'triangle' ? 'M10 28 L25 12 L40 28 L55 12 L70 28' : 'M10 20 C18 4,26 4,30 20 S42 36,50 20 S62 4,70 20'; return `<svg viewBox="0 0 80 40"><rect x="4" y="3" width="72" height="34" rx="5" fill="#0d1a10" stroke="${W}" stroke-width="1.5"/><path d="${d}" fill="none" stroke="#5dff7a" stroke-width="2.5"/></svg>`; };
+  const sunSym = f => `<svg viewBox="0 0 80 40"><g stroke="#ffc21a" stroke-width="2.5" stroke-linecap="round" opacity="${.25 + .75 * f}">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<line x1="${40 + Math.cos(a * PI / 180) * 12}" y1="${20 + Math.sin(a * PI / 180) * 12}" x2="${40 + Math.cos(a * PI / 180) * 17}" y2="${20 + Math.sin(a * PI / 180) * 17}"/>`).join('')}</g><circle cx="40" cy="20" r="8" fill="rgba(255,194,26,${.2 + .8 * f})"/></svg>`;
+  /* ---- output symbols ---- */
+  const ledSym = (b, rgb) => `<svg viewBox="0 0 80 40" style="filter:drop-shadow(0 0 ${2 + 12 * b}px rgba(${rgb},${b}))"><path d="M28 32 V16 a12 12 0 0 1 24 0 V32 Z" fill="rgba(${rgb},${.18 + .82 * b})" stroke="rgba(${rgb},.9)" stroke-width="2"/><rect x="25" y="30" width="30" height="4" rx="1" fill="rgba(${rgb},${.3 + .6 * b})"/><line x1="34" y1="34" x2="34" y2="40" stroke="#aab" stroke-width="2"/><line x1="46" y1="34" x2="46" y2="38" stroke="#aab" stroke-width="2"/>${b > .05 ? `<circle cx="35" cy="14" r="3" fill="rgba(255,255,255,${.4 + .5 * b})"/>` : ''}</svg>`;
+  const lampSym = b => `<svg viewBox="0 0 80 40" style="filter:drop-shadow(0 0 ${2 + 14 * b}px rgba(255,200,60,${b}))"><circle cx="40" cy="16" r="13" fill="rgba(255,214,92,${.08 + .9 * b})" stroke="#e8d9a8" stroke-width="2"/><path d="M34 22 L37 14 L40 20 L43 14 L46 22" fill="none" stroke="${b > .05 ? '#fff6c8' : '#8a7f60'}" stroke-width="1.6"/><rect x="33" y="29" width="14" height="9" rx="2" fill="#9aa3ad"/></svg>`;
+  const motorSym = (th, w) => `<svg viewBox="0 0 80 40"><circle cx="40" cy="20" r="17" fill="#2b3138" stroke="${W}" stroke-width="2"/><g transform="rotate(${th} 40 20)" fill="#ffc21a">${[0, 120, 240].map(a => `<ellipse cx="40" cy="12" rx="3.4" ry="7.5" transform="rotate(${a} 40 20)"/>`).join('')}</g><circle cx="40" cy="20" r="3" fill="#fff"/>${Math.abs(w) > 5 ? `<path d="M64 10 A 26 26 0 0 1 64 30" fill="none" stroke="${ON}" stroke-width="2.5"/><path d="M16 30 A 26 26 0 0 1 16 10" fill="none" stroke="${ON}" stroke-width="2.5"/>` : ''}</svg>`;
+  const sndSym = on => `<svg viewBox="0 0 80 40"><path d="M14 14 H24 L36 5 V35 L24 26 H14 Z" fill="${on ? '#ffc21a' : '#3a434e'}" stroke="${W}" stroke-width="1.8" stroke-linejoin="round"/>${on ? `<g fill="none" stroke="#ff9d00" stroke-width="2.5" stroke-linecap="round" class="io-waves"><path d="M44 13 Q50 20 44 27"/><path d="M51 8 Q61 20 51 32"/><path d="M58 3 Q72 20 58 37"/></g>` : `<path d="M46 14 L58 26 M58 14 L46 26" stroke="${DIM}" stroke-width="2.5" stroke-linecap="round"/>`}</svg>`;
+  const relaySym = on => `<svg viewBox="0 0 80 40"><rect x="6" y="10" width="20" height="20" rx="2" fill="${on ? 'rgba(47,191,113,.35)' : '#26303b'}" stroke="${W}" stroke-width="2"/><path d="M10 15 h12 M10 20 h12 M10 25 h12" stroke="${W}" stroke-width="1.5"/><circle cx="40" cy="28" r="3" fill="${W}"/><circle cx="72" cy="28" r="3" fill="${W}"/><circle cx="72" cy="10" r="3" fill="${W}"/><line x1="40" y1="28" x2="${on ? 70 : 69}" y2="${on ? 28 : 11}" stroke="${on ? ON : '#ffc21a'}" stroke-width="3.5" stroke-linecap="round"/><text x="60" y="38" font-size="8" fill="${DIM}" font-family="monospace">NO</text></svg>`;
+  const dotSym = (hi, col) => `<svg viewBox="0 0 80 40" style="filter:drop-shadow(0 0 ${hi ? 8 : 0}px ${col})"><circle cx="40" cy="20" r="12" fill="${hi ? col : '#2a1210'}" stroke="${W}" stroke-width="2"/></svg>`;
+  const meterSym = (c) => { const v = c._e && c._e.read && SIM.x.length ? c._e.read(SIM.x) : 0; return `<svg viewBox="0 0 80 40"><rect x="10" y="3" width="60" height="34" rx="5" fill="#0d1a10" stroke="${W}" stroke-width="1.5"/><text x="40" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#5dff7a" font-family="monospace">${c.t === 'VM' ? 'V' : 'A'}</text></svg>`; };
+  function inSym(c) {
+    if (c.t === 'SW') return swSym(!!c.p.closed);
+    if (c.t === 'PB') return pbSym(!!c.p.pressed);
+    if (c.t === 'LSW') return lswSym(!!c.p.on);
+    if (c.t === 'POT') return knobSym(c.p.pos, '#ffc21a');
+    if (c.t === 'VADJ') return knobSym(c.p.V / Math.max(c.p.Vmax, .1), '#5dff7a');
+    if (c.t === 'FG') return fgSym(c);
+    return sunSym(clamp(c.p.light, 0, 1));
+  }
+  function inText(c) {
+    if (c.t === 'SW') return c.p.closed ? 'ON — ต่อวงจร' : 'OFF — ตัดวงจร';
+    if (c.t === 'PB') return c.p.pressed ? 'กำลังกด' : 'กดค้างที่รูป';
+    if (c.t === 'LSW') return c.p.on ? '1 (HIGH)' : '0 (LOW)';
+    if (c.t === 'POT') return fmtEng(c.p.R * c.p.pos, 'Ω') + ' (' + Math.round(c.p.pos * 100) + '%)';
+    if (c.t === 'VADJ') return c.p.V.toFixed(1) + ' V';
+    if (c.t === 'FG') return fmtEng(c.p.f, 'Hz');
+    return 'แสง ' + Math.round(c.p.light * 100) + '%';
+  }
+  function outSym(c) {
+    if (c.t === 'LED') return ledSym(ledBright(c), (LEDC[c.p.color] || LEDC.red).rgb.join(','));
+    if (c.t === 'LAMP') return lampSym(lampB(c));
+    if (c.t === 'MOTOR') return motorSym(((c.st.th || 0) * 180 / PI).toFixed(1), c.st.w || 0);
+    if (c.t === 'BUZ') return sndSym(!!c.st.on && UI.running);
+    if (c.t === 'SPK') return sndSym(!!(c._au && c._au.f > 20) && UI.running);
+    if (c.t === 'RELAY') return relaySym(!!c.st.on);
+    if (c.t === 'LPROBE') return dotSym(nv(c, 0) > 2.5, '#ff3b30');
+    if (c.t === 'HEX') return `<span class="io-hex">${hexVal(c).toString(16).toUpperCase()}</span>`;
+    return meterSym(c);
+  }
+  function outText(c) {
+    if (c.t === 'LED') { const b = ledBright(c); return (b > .05 ? 'สว่าง' : 'ดับ') + ' · ' + fmtEng(c._e && c._e.I ? c._e.I[0] : 0, 'A'); }
+    if (c.t === 'LAMP') { const b = lampB(c); return (b > .05 ? 'สว่าง ' : 'ดับ ') + Math.round(b * 100) + '%'; }
+    if (c.t === 'MOTOR') { const w = c.st.w || 0; return (Math.abs(w) > 5 ? 'หมุน ' : 'หยุด ') + Math.round(Math.abs(w) * 60 / (2 * PI)) + ' rpm'; }
+    if (c.t === 'BUZ') return c.st.on ? 'กำลังดัง' : 'เงียบ';
+    if (c.t === 'SPK') return c._au && c._au.f > 20 ? 'ดัง ' + fmtEng(c._au.f, 'Hz') : 'เงียบ';
+    if (c.t === 'RELAY') return c.st.on ? 'ทำงาน (ON)' : 'ไม่ทำงาน (OFF)';
+    if (c.t === 'LPROBE') return nv(c, 0) > 2.5 ? '1 (HIGH)' : '0 (LOW)';
+    if (c.t === 'HEX') return 'ค่า ' + hexVal(c);
+    return meterText(c);
+  }
+  const ctl = c => c.t === 'POT' ? `<input type="range" min="0" max="1000" data-io="pot" data-ref="${c.ref}">` : c.t === 'VADJ' ? `<input type="range" min="0" max="${Math.round(c.p.Vmax * 10)}" data-io="vadj" data-ref="${c.ref}">` : c.t === 'FG' ? `<div class="io-row"><button class="io-btn" data-io="fg" data-k="0.5" data-ref="${c.ref}">f ÷ 2</button><button class="io-btn" data-io="fg" data-k="2" data-ref="${c.ref}">f × 2</button></div>` : (c.p && c.p.light != null && !IN_T.has(c.t)) ? `<input type="range" min="0" max="100" data-io="light" data-ref="${c.ref}">` : '';
+  const act = c => c.t === 'SW' ? 'sw' : c.t === 'LSW' ? 'lsw' : c.t === 'PB' ? 'pb' : '';
+  const card = (c, out) => `<div class="io-it${out ? ' o' : ''}"><div class="lb"><b>${c.ref}</b><span>${nm(c)}</span></div><div class="io-sym${act(c) ? ' click' : ''}"${act(c) ? ` data-io="${act(c)}" data-ref="${c.ref}" role="button" tabindex="0"` : ''} data-s="${c.ref}"></div><div class="io-tx" data-t="${c.ref}"></div>${out ? '' : ctl(c)}</div>`;
+  function build() {
+    const ins = S.comps.filter(isIn), outs = S.comps.filter(isOut);
+    sig = S.comps.map(c => c.ref + c.t).join('|');
+    el.innerHTML = `<div class="io-grp in"><h4><i></i>อุปกรณ์อินพุต (แตะสัญลักษณ์สวิตช์ / ปรับค่า)</h4>${ins.length ? `<div class="io-list">${ins.map(c => card(c, false)).join('')}</div>` : '<div class="io-empty">วงจรนี้ไม่มีสวิตช์หรืออุปกรณ์ปรับค่า</div>'}</div>
+      <div class="io-grp out"><h4><i></i>อุปกรณ์เอาต์พุต (การแสดงผล)</h4>${outs.length ? `<div class="io-list">${outs.map(c => card(c, true)).join('')}</div>` : '<div class="io-empty">วงจรนี้ไม่มีอุปกรณ์แสดงผล</div>'}</div>`;
+    update(true);
+  }
+  function update(full) {
+    el.querySelectorAll('[data-s]').forEach(d => { const c = ref(d.dataset.s); if (!c) return; const h = isOut(c) ? outSym(c) : inSym(c); if (d._h !== h) { d.innerHTML = h; d._h = h; } });
+    el.querySelectorAll('[data-t]').forEach(d => { const c = ref(d.dataset.t); if (!c) return; const t = isOut(c) ? outText(c) : inText(c); if (d.textContent !== t) d.textContent = t; d.classList.toggle('lit', isOut(c) ? /สว่าง|หมุน|ดัง|ทำงาน \(ON|HIGH/.test(t) : /ON —|กำลังกด|HIGH/.test(t)); });
+    if (full) el.querySelectorAll('input[data-io]').forEach(r => { const c = ref(r.dataset.ref); if (!c) return; r.value = c.t === 'POT' ? Math.round(c.p.pos * 1000) : c.t === 'VADJ' ? Math.round(c.p.V * 10) : Math.round(c.p.light * 100); });
+  }
+  const setOn = () => { if (document.body.classList.contains('sc-full')) build(); };
+  new MutationObserver(setOn).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  setInterval(() => { if (!document.body.classList.contains('sc-full')) return; if (S.comps.map(c => c.ref + c.t).join('|') !== sig) build(); else update(false); }, 100);
+  const tap = b => { const c = ref(b.dataset.ref); if (!c) return; if (b.dataset.io === 'sw') { c.p.closed = !c.p.closed; changed(false); } else if (b.dataset.io === 'lsw') { c.p.on = !c.p.on; changed(false); } else if (b.dataset.io === 'fg') { c.p.f = clamp(c.p.f * +b.dataset.k, 0.1, 1e6); changed(false); } update(false); };
+  el.addEventListener('click', e => { const b = e.target.closest('[data-io]'); if (b && b.dataset.io !== 'pb') tap(b); });
+  el.addEventListener('keydown', e => { const b = e.target.closest('[data-io]'); if (b && (e.key === 'Enter' || e.key === ' ') && b.dataset.io !== 'pb') { e.preventDefault(); tap(b); } });
+  el.addEventListener('pointerdown', e => { const b = e.target.closest('[data-io="pb"]'); if (!b) return; e.preventDefault(); const c = ref(b.dataset.ref); if (!c) return; try { b.setPointerCapture(e.pointerId); } catch (err) { } c.p.pressed = true; changed(false); update(false); });
+  const rel = e => { const b = e.target.closest('[data-io="pb"]'); if (!b) return; const c = ref(b.dataset.ref); if (!c || !c.p.pressed) return; c.p.pressed = false; changed(false); update(false); };
+  el.addEventListener('pointerup', rel); el.addEventListener('pointercancel', rel);
+  el.addEventListener('input', e => {
+    const r = e.target.closest('input[data-io]'); if (!r) return; const c = ref(r.dataset.ref); if (!c) return;
+    if (r.dataset.io === 'pot') { c.p.pos = +r.value / 1000; simRebuild(S); }
+    else if (r.dataset.io === 'vadj') c.p.V = +r.value / 10;
+    else if (r.dataset.io === 'light') { c.p.light = +r.value / 100; simRebuild(S); }
+    update(false);
+  });
+  el.addEventListener('change', () => save());
 }
 
 /* ---------- boot ---------- */
