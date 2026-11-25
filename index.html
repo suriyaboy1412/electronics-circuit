@@ -458,6 +458,14 @@ body.sc-full.mode-exp.logged .sp-title{margin-right:0}
 body.sc-full.mode-exp.logged .sp-head{flex-wrap:wrap}
 @media (max-width:1100px){body.sc-full.mode-exp.logged #stu2{order:10;flex-basis:100%;justify-content:flex-start;margin:4px 0 2px}}
 @media (max-width:640px){#stu2 span{font-size:11.5px;height:24px;padding:0 7px}}
+#ws .parts li.extra span{color:var(--muted)}
+#ws .parts li.miss{opacity:.5}
+#props .ph{align-items:center}
+.dtog{margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border:1px solid var(--border);border-radius:13px;background:var(--panel2);color:var(--muted);font:600 11.5px var(--ui);cursor:pointer;white-space:nowrap}
+.dtog svg{width:14px;height:14px}
+.dtog.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.dtog+.x{margin-left:4px}
+body.no-desc #props .role,body.no-desc #props .desc{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -524,6 +532,8 @@ body.sc-full.mode-exp.logged .sp-head{flex-wrap:wrap}
       <button data-tool="wire" class="edit-only"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 15h6V5h8"/><circle cx="3" cy="15" r="1.6" fill="currentColor"/><circle cx="17" cy="5" r="1.6" fill="currentColor"/></svg><span>ต่อสาย</span></button>
       <button data-tool="p1"><i class="probe-dot" style="background:#ffc21a">1</i><span>โพรบ 1</span></button>
       <button data-tool="p2"><i class="probe-dot" style="background:#38d6f0">2</i><span>โพรบ 2</span></button>
+      <button id="tInfo" aria-label="เปิด/ปิดคำอธิบายอุปกรณ์" title="เปิด/ปิดคำอธิบายอุปกรณ์"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5"/><circle cx="10" cy="6.2" r=".6" fill="currentColor"/></svg><span>คำอธิบาย</span></button>
+      <button id="tProbeOff" class="edit-only" aria-label="ยกเลิกโพรบ" title="ยกเลิกโพรบ (เลือกโพรบ 1 หรือ 2 ไว้ก่อนเพื่อยกเลิกเฉพาะช่องนั้น)"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="8" cy="8" r="4.5"/><path d="M11.3 11.3L17 17"/><path d="M13.5 3.5l4 4M17.5 3.5l-4 4" stroke="#e5484d"/></svg><span>ล้างโพรบ</span></button>
       <button data-tool="del" class="edit-only"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11"/></svg><span>ลบ</span></button>
       <div class="sep"></div>
       <button id="tRot" class="edit-only"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M15 9a5.5 5.5 0 1 1-2-4.3"/><path d="M14 2v3.5h-3.5"/></svg><span>หมุน</span></button>
@@ -3890,6 +3900,73 @@ cv.addEventListener('wheel', e => {
   new MutationObserver(() => requestAnimationFrame(place)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   el.title = 'ลากเพื่อย้ายตำแหน่ง · ดับเบิลคลิกเพื่อกลับตำแหน่งเดิม';
   requestAnimationFrame(place);
+}
+
+/* ---------- clear probes (edit mode) ---------- */
+$('#tProbeOff').addEventListener('click', () => {
+  if (!canEdit()) return;
+  const only = UI.tool === 'p1' ? 0 : UI.tool === 'p2' ? 1 : -1;
+  const ids = only >= 0 ? [only] : [0, 1];
+  if (!ids.some(j => scope.ch[j] && scope.ch[j].src)) { toast('ยังไม่มีโพรบให้ยกเลิก'); return; }
+  ids.forEach(j => { const ch = scope.ch[j]; if (!ch) return; ch.src = null; ch.node = null; ch.comp = null; });
+  clearScope(); resolveProbes(); if (typeof setTool === 'function') setTool('sel'); save();
+  toast(only >= 0 ? `ยกเลิกโพรบ ${only + 1} แล้ว` : 'ยกเลิกโพรบทั้งหมดแล้ว');
+});
+
+/* ---------- device explanation toggle (both modes) ---------- */
+function partRows(inf) {
+  const real = S.comps.filter(c => c.t !== 'GND' && c.t !== 'VCC'), have = new Set(real.map(c => c.ref)), rows = [], seen = new Set();
+  if (inf && inf.parts) Object.entries(inf.parts).forEach(([r, d]) => { seen.add(r); rows.push(`<li data-ref="${r}"${have.has(r) ? '' : ' class="miss"'}><b>${r}</b><span>${d}</span></li>`); });
+  real.filter(c => !seen.has(c.ref)).forEach(c => { const D = DEF[c.t] || {}; rows.push(`<li data-ref="${c.ref}" class="extra"><b>${c.ref}</b><span><b style="font-weight:600">${D.n || c.t}</b>${D.d ? ' — ' + D.d : ''}</span></li>`); });
+  return rows.join('');
+}
+{
+  const showWS1 = showWS;
+  showWS = function (ex) {
+    showWS1(ex);
+    const ul = $('#ws .parts'); if (ul && ex && ex.info) ul.innerHTML = partRows(ex.info);
+  };
+}
+function showDeviceInfo() {
+  const el = $('#ws'), ex = UI.refEx != null ? EX[UI.refEx] : null;
+  el.dataset.tab = 'info';
+  if (ex && (ex.ws || ex.info)) showWS(ex);
+  else {
+    const rows = partRows(null);
+    el.innerHTML = `<div class="wsh"><button class="wst" data-ws="toggle"><span class="wsk">วงจรที่ต่อเอง</span><b>คำอธิบายอุปกรณ์</b></button><button class="x" data-ws="close" aria-label="ปิด">✕</button></div><div class="wsb"><p class="wsl">อุปกรณ์ในวงจร (แตะเพื่อดูตำแหน่ง)</p>${rows ? `<ul class="parts">${rows}</ul>` : '<p class="wsg">ยังไม่มีอุปกรณ์ในวงจร</p>'}</div>`;
+  }
+  el.hidden = false; el.classList.remove('min');
+}
+$('#tInfo').addEventListener('click', () => {
+  const el = $('#ws'), open = !el.hidden && !el.classList.contains('min') && (el.dataset.tab || 'info') === 'info';
+  if (open) el.hidden = true; else showDeviceInfo();
+});
+{
+  const sync = () => { const el = $('#ws'); $('#tInfo').classList.toggle('on', !el.hidden && !el.classList.contains('min') && (el.dataset.tab || 'info') === 'info'); };
+  new MutationObserver(sync).observe($('#ws'), { attributes: true, attributeFilter: ['hidden', 'class', 'data-tab'], childList: true });
+  sync();
+}
+
+/* ---------- show/hide device description inside the selection panel ---------- */
+{
+  const KEY = 'circuitsim-desc';
+  let on = true; try { on = localStorage.getItem(KEY) !== '0'; } catch (e) { }
+  const apply = () => document.body.classList.toggle('no-desc', !on);
+  apply();
+  const sp = showProps;
+  showProps = function () {
+    sp.apply(this, arguments);
+    const el = $('#props'), ph = el.querySelector('.ph'); if (el.hidden || !ph || ph.querySelector('.dtog') || !(UI.sel && UI.sel.k === 'c')) return;
+    const b = document.createElement('button'); b.className = 'dtog' + (on ? ' on' : ''); b.dataset.dtog = '1';
+    b.title = 'เปิด/ปิดคำอธิบายอุปกรณ์'; b.setAttribute('aria-pressed', on);
+    b.innerHTML = `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5"/><circle cx="10" cy="6.2" r=".6" fill="currentColor"/></svg>คำอธิบาย ${on ? 'เปิด' : 'ปิด'}`;
+    ph.insertBefore(b, ph.querySelector('.x'));
+  };
+  $('#props').addEventListener('click', e => {
+    if (!e.target.closest('[data-dtog]')) return;
+    e.stopImmediatePropagation(); on = !on; apply(); try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (err) { }
+    showProps(); toast(on ? 'แสดงคำอธิบายอุปกรณ์เมื่อเลือก' : 'ซ่อนคำอธิบายอุปกรณ์เมื่อเลือก');
+  }, true);
 }
 
 /* ---------- boot ---------- */
